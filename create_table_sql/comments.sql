@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS `comments` (
+  `comment_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `text` VARCHAR(1000) NULL DEFAULT NULL,
+  `thread_id` INT(11) NULL DEFAULT NULL,
+  `create_time` CHAR(13) NULL DEFAULT NULL,
+  `author_name` VARCHAR(30) NULL DEFAULT NULL,
+  `author_email` VARCHAR(45) NULL DEFAULT NULL,
+  `author_url` VARCHAR(45) NULL DEFAULT NULL,
+  `author_ip` VARCHAR(45) NULL DEFAULT NULL,
+  `author_ua` VARCHAR(200) NULL DEFAULT NULL,
+  `parent_comment_id` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`comment_id`))
+DEFAULT CHARACTER SET = utf8;

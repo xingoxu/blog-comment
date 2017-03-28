@@ -1,0 +1,35 @@
+version: '2'
+services: 
+  comment-system:
+    depends_on:
+      - mysql
+    build: .
+    environment: 
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: root
+      MYSQL_PASSWORD: MYSQL_ROOT_PASSWORD_REPLACE
+      MYSQL_DATABASE: blog_comment
+      MYSQL_PORT: 3306
+      PORT: 3000
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    entrypoint: 
+      - npm
+      - start
+    links: 
+      - mysql:mysql
+    working_dir: /app
+    volumes:
+      - ./:/app
+
+  mysql:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD_REPLACE
+      MYSQL_DATABASE: blog_comment
+    expose: 
+      - "3306"
+    ports: 
+      # 前面是host port 
+      - "6543:3306"
