@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-let errorProcess = require('../utils/error.js');
+let errorProcess = require('../utils/error.js'),
+  md5 = require('md5');  
 let threadController = require('../dao/threads.js'),
   commentController = require('../dao/comments.js');
 let CONST = require('../config/const.json');
@@ -12,6 +13,8 @@ function commentTransform(result) {
   //comment_id, create_time, author_name,author_email,author_url,parent_comment_id
   for (let i = 0; i < result.length; i++){
     let comment = result[i];
+    comment.uid = md5(comment.author_email);
+    delete comment.author_email;
     commentDict[comment.comment_id] = comment;
     let comment_parent_comment_id = comment.parent_comment_id;
     if (comment_parent_comment_id) {
