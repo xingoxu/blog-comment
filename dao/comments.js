@@ -5,7 +5,7 @@
 let curryDAO = require('../utils/curryDAO.js');
 
 let SQLQuotes = {
-      getThreadComments: `SELECT comment_id, create_time, author_name,author_email,author_url,parent_comment_id FROM threads,comments WHERE comments.thread_id = threads.thread_id AND threads.thread_key = ? ORDER BY create_time+0 DESC`,
+      getThreadComments: `SELECT comment_id,text, create_time, author_name,author_email,author_url,author_ua,parent_comment_id FROM threads,comments WHERE comments.thread_id = threads.thread_id AND threads.thread_key = ? ORDER BY create_time+0 DESC`,
       newComment: `INSERT INTO comments (text,thread_id,create_time,author_name,author_email,author_url,author_ip, author_ua ,parent_comment_id) VALUES (?,?,?,?,?,?,?,?,?)`,
       commentEXIST: `SELECT count(1) as count FROM comments WHERE comment_id = ?`,
       sameIP_lastComment_time:`SELECT create_time FROM comments WHERE author_ip = ? ORDER BY create_time+0 DESC LIMIT 1`,
