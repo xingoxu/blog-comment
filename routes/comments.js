@@ -77,7 +77,7 @@ function emailValid(email) {
  */
 router.post('/', allowCrossDomain, (req, res, next) => {
   let json = req.body;
-  let ua = req.get('user-agent'), ip = req.ip;
+  let ua = req.get('user-agent'), ip = (req.get('X-Real-IP') || req.ip);
   if (!stringNotEmpty(json.thread_key) || json.thread_key.length > CONST.THREAD_KEY_MAX_LENGTH)
     return errorProcess(next, 400, 'Bad Request');
   if (!urlValid(json.thread_url) || json.thread_url.length > CONST.THREAD_URL_MAX_LENGTH)
