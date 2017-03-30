@@ -150,6 +150,7 @@ router.post('/', allowCrossDomain, (req, res, next) => {
       create_time: Date.now() + '',
       author_name: json.author_name,
       author_url: json.author_url,
+      author_ua: ua,      
       parent_comment_id: json.parent_comment_id,
       uid: md5(json.author_email),
     });
