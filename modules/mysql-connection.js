@@ -6,7 +6,8 @@ var connectionPool = require('mysql').createPool({
   database: process.env.MYSQL_DATABASE,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
-  port: process.env.MYSQL_PORT
+  port: process.env.MYSQL_PORT,
+  charset: 'utf8mb4'
 });
 var cb = function (err) {
   if (err)
