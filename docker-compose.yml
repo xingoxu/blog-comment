@@ -28,6 +28,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD_REPLACE
       MYSQL_DATABASE: blog_comment
+    volumes:
+    - ./mysql:/var/lib/mysql
     expose: 
       - "3306"
     ports: 
