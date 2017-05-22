@@ -10,4 +10,5 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `author_ua` VARCHAR(200) NULL DEFAULT NULL,
   `parent_comment_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`comment_id`))
-DEFAULT CHARACTER SET = utf8mb4_unicode_ci;
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
