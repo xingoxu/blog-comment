@@ -9,7 +9,7 @@ app.get('env') !== 'development' ? app.disable('x-powered-by') : false;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 //trust proxy setup
-// app.set('trust proxy', 'loopback');
+app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 
 app.get('env') === 'development' ? app.use(logger('dev')) : false;
 app.use(bodyParser.json());
