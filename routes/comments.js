@@ -9,22 +9,27 @@ let allowCrossDomain = require('../utils/setCrossDomain.js');
 
 // transfer children comment to parent comment's children_comments key
 // it can be done both frontend & backend
-function commentTransform(result) {
+function commentTransform(result, allResult) {
   let comments = [], commentDict = {}, parentCommentDict = {};
   //comment_id, create_time, author_name,author_email,author_url,author_ua,parent_comment_id,text
-  for (let i = 0; i < result.length; i++){
+  for (let i = 0; i < result.length; i++) {
     let comment = result[i];
     comment.uid = comment.author_email ? md5(comment.author_email) : null;
     delete comment.author_email;
     commentDict[comment.comment_id] = comment;
+    comments.push(comment);
+  }
+  for (let i = 0; i < allResult.length; i++) {
+    let comment = allResult[i];
+
+    if (!commentDict[comment.comment_id])
+      commentDict[comment.comment_id] = comment;
+
     let comment_parent_comment_id = comment.parent_comment_id;
     if (comment_parent_comment_id) {
       if (!parentCommentDict[comment_parent_comment_id])
         parentCommentDict[comment_parent_comment_id] = [];
       parentCommentDict[comment_parent_comment_id].unshift(comment);
-    }
-    else {
-      comments.push(comment);
     }
   }
   for (let post_key in parentCommentDict) {
@@ -36,15 +41,28 @@ function commentTransform(result) {
 //get comments
 //params: thread_key
 router.get('/', allowCrossDomain, function (req, res, next) {
-  let query = req.query;
-  if (!query.thread_key || query.thread_key.trim().length <= 0)
+  let { thread_key, page_index, page_size } = req.query;
+  if (!thread_key || thread_key.trim().length <= 0)
     return errorProcess(next, 400, 'Bad Request');
+  
+  page_index = Number.parseInt(page_index) || 1;
+  page_size = Number.parseInt(page_size) || 20;
+  if (page_index < 1 || page_size < 1)
+    return errorProcess(next, 400, 'Bad Request');
+
+  thread_key = thread_key.trim();
+
   //DESC
-  return commentController.getThreadComments(query.thread_key.trim()).then(result => {
+  return Promise.all([
+    commentController.getThreadCommentFirstWithOffset(thread_key, page_index, page_size),
+    commentController.getThreadComments(thread_key),
+    commentController.getThreadCommentCount(thread_key)
+  ]).then(([comments, allComments, count]) => {
     return res.json({
-      comments: commentTransform(result),
+      comments: commentTransform(comments, allComments),
+      count,
       admin: md5(CONST.admin_mail)
-    })
+    });
   }).catch(err => {
     next(err);
   });
