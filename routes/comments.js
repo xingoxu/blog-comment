@@ -7,6 +7,11 @@ let threadController = require('../dao/threads.js'),
 let CONST = require('../config/const.json');
 let allowCrossDomain = require('../utils/setCrossDomain.js');
 
+function processComment(comment) {
+  comment.uid = comment.author_email ? md5(comment.author_email) : null;
+  delete comment.author_email;
+}
+
 // transfer children comment to parent comment's children_comments key
 // it can be done both frontend & backend
 function commentTransform(result, allResult) {
@@ -14,13 +19,16 @@ function commentTransform(result, allResult) {
   //comment_id, create_time, author_name,author_email,author_url,author_ua,parent_comment_id,text
   for (let i = 0; i < result.length; i++) {
     let comment = result[i];
-    comment.uid = comment.author_email ? md5(comment.author_email) : null;
-    delete comment.author_email;
+
+    processComment(comment);
+
     commentDict[comment.comment_id] = comment;
     comments.push(comment);
   }
   for (let i = 0; i < allResult.length; i++) {
     let comment = allResult[i];
+
+    processComment(comment);
 
     if (!commentDict[comment.comment_id])
       commentDict[comment.comment_id] = comment;
