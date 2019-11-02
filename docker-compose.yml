@@ -3,7 +3,7 @@ services:
   comment-system:
     depends_on:
       - mysql
-    image: node:6
+    image: node:12-slim
     environment: 
       MYSQL_HOST: "mysql"
       MYSQL_USER: root
